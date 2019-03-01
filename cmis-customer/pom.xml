@@ -1,0 +1,146 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.hbcfc.yusys.cmis</groupId>
+	<artifactId>cmis-customer</artifactId>
+	<version>0.0.5</version>
+	<name>客户管理</name>
+	<description>湖北消金的客户管理</description>
+	<packaging>pom</packaging>
+	
+	<scm>
+		<!--只读权限的git地址，可以和developerConnection一样，如果权限没有细分的话 -->
+		<connection>scm:git:http://10.10.0.99:8181/lenxuebo/cmis-customer.git</connection>
+		<!--具有写权限的git地址 -->
+		<developerConnection>scm:git:http://10.10.0.99:8181/lenxuebo/cmis-customer.git</developerConnection>
+		<!--项目查看地址 -->
+		<url>http://10.10.0.99:8181/lenxuebo/cmis-customer</url>
+		<tag>v0.0.5-SNAPSHOT</tag>
+	</scm>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.0.8.RELEASE</version>
+	</parent>
+	
+	<modules>
+		<module>customer-api</module>
+		<module>customer-channel</module>
+		<module>customer-cmis</module>
+		<module>customer-core</module>
+		<module>customer-starter</module>
+	</modules>
+	
+	<properties>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java.version>1.8</java.version>
+		<mybatis.springboot.version>1.3.2</mybatis.springboot.version>
+		<venus.feign.version>1.0.0</venus.feign.version>
+		<apollo-client.version>1.1.0</apollo-client.version>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<!-- <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency> -->
+		
+		<dependency>
+			<groupId>com.ctrip.framework.apollo</groupId>
+			<artifactId>apollo-client</artifactId>
+			<version>${apollo-client.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.google.guava</groupId>
+					<artifactId>guava</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>Finchley.RELEASE</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<executable>true</executable>
+				</configuration>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-scm-plugin</artifactId>
+				<version>1.9.5</version>
+				<configuration>
+					<connectionType>developerConnection</connectionType>
+				</configuration>
+			</plugin>
+			<!-- maven发布插件，使用方法 如下：按顺序依次执行
+				mvn release:clean #发布前的清理
+				mvn release:branch -DbranchName=1.0.x -DupdateBranchVersions=true -DupdateWorkingCopyVersions=false #发布前先创建补丁分支
+				mvn release:prepare #发布版本 打标签
+				mvn release:perform -DuseReleaseProfile=false #发布版本到私服
+				mvn release:rollback #回滚版本 删除本地分支git branch -d <BranchName> 删除本地tag git tag -d <TagName>
+			-->
+			<plugin>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.5.3</version>
+				<configuration>
+					<!-- 可选属性为： project.groupId 对应于项目的groupId。 project.artifactId 对应于项目的artifactId。 
+						project.version 对应于项目的发行版本。 -->
+					<tagNameFormat>v${project.version}</tagNameFormat>
+					<!--因为是聚合工程，设置这个参数免去为每个子模块设置版本号的动作，统一使用聚合模块的版本号 -->
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+					<!--git 账号密码 -->
+					<username>lenxuebo</username>
+					<password>password</password>
+					<mavenHome>G:\maven\apache-maven-3.5.2</mavenHome>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	
+	<distributionManagement>
+		<snapshotRepository>
+			<id>maven-snapshots</id>
+			<url>http://10.10.0.99:8181/lenxuebo/cmis-customer/maven-snapshots/</url>
+		</snapshotRepository>
+		<repository>
+			<id>maven-releases</id>
+			<url>http://10.10.0.99:8181/lenxuebo/cmis-customer/maven-releases/</url>
+		</repository>
+	</distributionManagement>
+
+
+</project>

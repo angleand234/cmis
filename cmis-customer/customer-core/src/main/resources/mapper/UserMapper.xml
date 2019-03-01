@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hbcfc.yusys.cmis.customer.mapper.UserMapper">
+	<resultMap type="com.hbcfc.yusys.cmis.customer.mapper.domain.User" id="userMap">
+		<id property="id" column="id" />
+		<result property="username" column="username" />
+		<result property="password" column="password" />
+		<result property="email" column="email" />
+	</resultMap>
+	<resultMap type="com.hbcfc.yusys.cmis.customer.mapper.domain.User" id="userRoleMap"
+		extends="userMap">
+		<id property="role.id" column="role_id" />
+		<result property="role.roleName" column="role_name" />
+	</resultMap>
+	
+	<resultMap type="com.hbcfc.yusys.cmis.customer.mapper.domain.User" id="userRoleMap2"
+		extends="userMap">
+		<association property="role" javaType="com.hbcfc.yusys.cmis.customer.mapper.domain.Role">
+			<id property="id" column="role_id" />
+			<result property="roleName" column="role_name" />
+		</association>
+	</resultMap>
+	
+	<resultMap type="com.hbcfc.yusys.cmis.customer.mapper.domain.User" id="userRoleMap3"
+		extends="userMap">
+		<association property="role" column="{id=role}" select="com.hbcfc.yusys.cmis.customer.mapper.RoleMapper.selectById"/>
+	</resultMap>
+	
+	<resultMap type="com.hbcfc.yusys.cmis.customer.mapper.domain.UserRoleList" id="userRoleListMap">
+		<id property="id" column="id" />
+		<result property="username" column="username" />
+		<result property="password" column="password" />
+		<result property="email" column="email" />
+		<collection ofType="com.hbcfc.yusys.cmis.customer.mapper.domain.Role" property="roleList">
+			<id property="id" column="role_id" />
+			<result property="roleName" column="role_name" />
+			<result property="roleId" column="roleid" />
+		</collection>
+	</resultMap>
+	
+	<select id="selectAll" resultType="User">
+		select
+		u.id,u.username,u.password,u.email,r.rolename "role.roleName" from
+		t_user u,t_role r where u.role=r.id
+	</select>
+
+	<select id="selectById" resultType="User">
+		select
+		u.id,u.username,u.password,u.email,r.id "role.id",r.rolename
+		"role.roleName" from t_user u,t_role r where u.role=r.id and
+		u.id=#{id}
+	</select>
+
+	<select id="selectByIdMap" resultMap="userRoleMap">
+		select
+		u.id,u.username,u.password,u.email,r.id role_id,r.rolename role_name
+		from t_user u,t_role r where u.role=r.id and u.id=#{id}
+	</select>
+
+	<select id="selectByIdMap2" resultMap="userRoleMap2">
+		select
+		u.id,u.username,u.password,u.email,r.id role_id,r.rolename role_name
+		from t_user u,t_role r where u.role=r.id and u.id=#{id}
+	</select>
+	
+	<select id="selectByIdMap3" resultMap="userRoleMap3">
+		select
+		id,username,password,email,role from t_user where id=#{id}
+	</select>
+	
+	<select id="selectByIdMap4" resultMap="userRoleListMap">
+		select
+		u.id,u.username,u.password,u.email,r.id role_id,r.rolename role_name,r.role_id roleid
+		from t_user u,t_role r where u.role=r.role_id and u.id=#{id}
+	</select>
+
+</mapper>

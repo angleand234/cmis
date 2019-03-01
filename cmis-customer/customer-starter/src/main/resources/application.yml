@@ -1,0 +1,42 @@
+server:
+  port: 9090
+
+app:
+  id: SampleApp
+apollo:
+  meta: http://192.168.251.151:9001
+  bootstrap:
+    enabled: true
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/test?useSSL=false
+    username: root
+    password: 
+  application:
+    name: cmis-customer
+    
+mybatis:
+  mapper-locations:
+  - classpath:mapper/*.xml
+  type-aliases-package: com.hbcfc.yusys.cmis.customer.mapper.domain
+  configuration:
+    map-underscore-to-camel-case: true
+
+logging:
+  level:
+    com.hbcfc.yusys.cmis.customer.mapper: debug
+  file: ${spring.application.name}_${server.port}.log
+#日志文件路径
+logfile:
+  path: ../logs   
+
+   
+eureka: 
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+  
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka/

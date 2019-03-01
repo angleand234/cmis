@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hbcfc.yusys.cmis.customer.mapper.RoleMapper">
+	
+	<resultMap type="com.hbcfc.yusys.cmis.customer.mapper.domain.Role" id="roleMap">
+		<id property="id" column="role_id" />
+		<result property="roleName" column="role_name" />
+	</resultMap>
+
+	<select id="selectById" resultMap="roleMap">
+		select r.id role_id,r.rolename role_name from t_role r where r.id=#{id}
+	</select>
+
+
+</mapper>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<include resource="org/springframework/boot/logging/logback/defaults.xml" />
+	<springProperty scope="context" name="logPath" source="logfile.path"></springProperty>
+	<springProperty scope="context" name="logFile" source="logging.file"></springProperty>
+	<property name="LOG_FILE"
+		value="${logPath}/%d{yyyy-MM-dd}/${logFile}" />
+	
+	<property name="CONSOLE_LOG_PATTERN"
+              value=">%white(%d{yyyy-MM-dd HH:mm:ss}) %green([%thread]) %highlight(%-5level) %boldMagenta(%logger{10}) - %cyan(%msg%n)"/>
+	<property name="FILE_LOG_PATTERN" value="%-5p %d{yyyy-MM-dd HH:mm:ss.SSS} [%t, %X{X-B3-TraceId:-}, %X{X-B3-SpanId:-}] %c.%M:%L - %m%n"/>
+	<include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+	
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<Prudent>true</Prudent>
+		<encoder>
+			<pattern>${FILE_LOG_PATTERN}</pattern>
+		</encoder>
+		<file>${LOG_FILE}</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${LOG_FILE}.%i</FileNamePattern>
+			<maxHistory>30</maxHistory>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>128MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+	</appender>
+	
+	<!--输出到控制台-->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+       <!-- <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>-->
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+	
+	<root level="INFO">
+		<appender-ref ref="FILE" />
+		<appender-ref ref="console" />
+	</root>
+	
+	<logger name="com.hbcfc.yusys.cmis.customer.restful.CustomerChannelController" level="TRACE" additivity="false">
+        <appender-ref ref="console"/>
+    </logger>
+	
+</configuration>
