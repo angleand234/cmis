@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.hbcfc.yusys.cmis</groupId>
 	<artifactId>cmis-customer</artifactId>
-	<version>0.0.5</version>
+	<version>0.0.5-SNAPSHOT</version>
 	<name>客户管理</name>
 	<description>湖北消金的客户管理</description>
 	<packaging>pom</packaging>
